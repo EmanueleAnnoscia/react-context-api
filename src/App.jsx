@@ -9,29 +9,32 @@ import GuestLayout from "./layout/GuestLayout"
 import Page404 from "./pages/Page404"
 import SinglePostDetail from "./pages/postpages/SinglePostDetail"
 import PostPages from "./pages/postpages/Postpage"
+import { AlertProvider } from "./context/AlertContext"
 
 // function app con tutte le rotte
 function App() {
 
 
   return (
-    <PostProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<GuestLayout />} >
-            <Route path="/" element={<HomePage />} />
-            <Route path="/AboutUs" element={<AboutUs />} />   {/* fare routing tramite oggetto e richiamare solamente la chaive di un oggetto impostato in un altro file*/}
-            <Route path="/post" element = {<PostPages />}>
-              <Route path ="PostPages" element = {<PostPages />} />
-              <Route path="" element={<PostsList />} />
-              <Route path=":id" element={<SinglePostDetail />} />
-              <Route path="CreatePost" element={<CreatePost />} />
+    <AlertProvider>
+      <PostProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<GuestLayout />} >
+              <Route path="/" element={<HomePage />} />
+              <Route path="/AboutUs" element={<AboutUs />} />   {/* fare routing tramite oggetto e richiamare solamente la chaive di un oggetto impostato in un altro file*/}
+              <Route path="/post">
+                <Route path="PostPages" element={<PostPages />} />
+                <Route path="" element={<PostsList />} />
+                <Route path=":id" element={<SinglePostDetail />} />
+                <Route path="CreatePost" element={<CreatePost />} />
+              </Route>
+              <Route path="*" element={<Page404 />} /> {/* l'asterisco nelle path vuol dire che ogni cosa scriverà l'utente nel path, all'infuori di valori similari come l'id, verrà reinidirzzato nella pagina 404*/}
             </Route>
-            <Route path="*" element={<Page404 />} /> {/* l'asterisco nelle path vuol dire che ogni cosa scriverà l'utente nel path, all'infuori di valori similari come l'id, verrà reinidirzzato nella pagina 404*/}
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </PostProvider>
+          </Routes>
+        </BrowserRouter>
+      </PostProvider>
+    </AlertProvider>
   )
 }
 

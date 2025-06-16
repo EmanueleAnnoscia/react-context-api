@@ -1,11 +1,13 @@
 //import
-
+import { useAlertContext } from "../../context/AlertContext";
 import { useState } from "react";
 import axios from "axios";
 import BackButton from "../../components/BackButton";
 import { useNavigate } from "react-router-dom";
 
 function CreatePost() {
+
+  const { showAlert } = useAlertContext();
 
   //array per il mapping
   const genericsArray = ["author", "title", "body"]
@@ -23,7 +25,7 @@ function CreatePost() {
   //data
   const [formData, setFormData] = useState(initialFormData);
   //alert di risposta di avvenuta consegna
-  const [showAlert, setShowAlert] = useState(false);
+  // const [showAlert, setShowAlert] = useState(false);
   //use navigate
   const navigate = useNavigate();
 
@@ -42,7 +44,7 @@ function CreatePost() {
     //se  è            allora   altrimenti
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value }); //[name] in bracket notation è la chiave dinameica che cambia in base all'oggetto che l'utente utilizza ad esempio 
     //L’utente spunta la casella ⇒ event.target sarà:   
-                                              //L’utente scrive "Mario" ⇒ event.  target sarà:
+    //L’utente scrive "Mario" ⇒ event.  target sarà:
 
     //name = "public"                      name = "author"
 
@@ -59,19 +61,18 @@ function CreatePost() {
     event.preventDefault(); //prevenzione del refresh
     //invio dati all'API 
     axios
-    .post("https://67c5b4f3351c081993fb1ab6.mockapi.io/api/posts", formData)
-    .then((resp) => {
-      if (resp.data.id) {
-        setShowAlert(true);
-        setFormData(initialFormData);
-        navigate(`/post/${resp.data.id}`);
-        // Dopo 3 secondi nasconde l'alert e reindirizza
-        setTimeout(() => {
-          setShowAlert(false);
-        }, 3000);
-      }
-    });
-};
+      .post("https://67c5b4f3351c081993fb1ab6.mockapi.io/api/posts", formData)
+      .then((resp) => {
+        if (resp.data.id) {
+          showAlert({
+            message: "Post creato con successo!",
+            type: "success",
+          });
+          setFormData(initialFormData);
+          navigate(`/post/${resp.data.id}`);
+        }
+      });
+  };
 
   return (
     <div className="container my-3">
@@ -81,11 +82,11 @@ function CreatePost() {
             <div className="card-body">
               <h3 className="text-center mb-3">Post Form</h3>
 
-              {showAlert && (
+              {/* {showAlert && (
                 <div className="alert alert-success">
                   I dati sono stati inviati con successo
                 </div>
-              )}
+              )} */}
 
               <form onSubmit={sendData}>
                 {/* input generati automaticamente */}
